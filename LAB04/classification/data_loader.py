@@ -10,17 +10,17 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# ชี้ Path ไปยังโฟลเดอร์ data-music
+# Path to data-music
 CSV_PATH = (
     Path(__file__).resolve().parent.parent
     / "data-music"
     / "spotify-2023.csv"
 )
 
-# เลือก TARGET เป็น mode (Major / Minor) หรือเปลี่ยนเป็นคอลัมน์อื่นที่ต้องการ
+# TARGET is mode (Major / Minor) 
 TARGET = "mode"
 
-# เลือกลักษณะทางดนตรี (Audio features) ที่เป็นตัวเลขมาเป็น Features
+# Audio features => Features
 NUMERIC_FEATURES = [
     "bpm",
     "danceability_%",
@@ -32,7 +32,7 @@ NUMERIC_FEATURES = [
     "speechiness_%",
 ]
 
-# แปลง Key ดนตรีจากตัวอักษรเป็นตัวเลข
+# convert Key to number
 TEXT_FEATURES = {
     "key": {
         "C": 0,
@@ -52,10 +52,9 @@ TEXT_FEATURES = {
 
 
 def load_data(test_size=0.2, seed=42):
-  # Step 1 : Read CSV (ระบุ encoding ป้องกัน error จากชื่อเพลง/ศิลปิน)
+  # Step 1 : Read CSV (encoding)
   df = pd.read_csv(CSV_PATH, encoding="latin-1")
 
-  # กรองเฉพาะคอลัมน์ที่ใช้งานและลบแถวที่มีค่าว่าง
   required_cols = NUMERIC_FEATURES + list(TEXT_FEATURES.keys()) + [TARGET]
   df = df[required_cols].dropna()
 
@@ -64,19 +63,17 @@ def load_data(test_size=0.2, seed=42):
   for col, mapping in TEXT_FEATURES.items():
     X[col] = df[col].map(mapping)
 
-  # ลบแถวที่อาจ map ไม่ติด (เช่น ค่า key ที่ไม่อยู่ใน dict)
   valid_idx = X.dropna().index
   X = X.loc[valid_idx]
   df_clean = df.loc[valid_idx]
 
-  # แปลง Target เป็นตัวเลข (0, 1, ...)
   class_names = sorted(df_clean[TARGET].unique())
   y = df_clean[TARGET].map({name: i for i, name in enumerate(class_names)})
 
   X = X.to_numpy(dtype="float32")
   y = y.to_numpy(dtype="int32")
 
-  # Step 3 : Split data เป็น Train 60% / Validation 20% / Test 20%
+  # Step 3 : Split data : Train 60% / Validation 20% / Test 20%
   X_temp, X_test, y_temp, y_test = train_test_split(
       X, y, test_size=test_size, random_state=seed, stratify=y
   )
