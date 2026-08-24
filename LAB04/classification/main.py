@@ -44,7 +44,6 @@ def main():
     title("STEP 2 : search k for finding the best value")
 
     # the result from validation is not used for testing
-    # baseline test to keep in finel ไม่งั้นจะเหมือน "เห็นข้อสอบก่อน"
     k_values = [1, 2, 3, 5, 10, 11, 15, 21, 30]
     scores = []
 
@@ -89,8 +88,6 @@ def main():
 
     title("STEP 5 : Is our model better than guessing? ")
 
-    # Baseline = predict class ที่พบบ่อย
-    # if model win : baseline is not feature is helpful
     majority = np.bincount(y_train).argmax()
     baseline = float(np.mean(y_test == majority))
 
