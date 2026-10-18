@@ -1,0 +1,8 @@
+{
+  "split": "test",
+  "crops": 359,
+  "accuracy": 0.7075208913649025,
+  "precision_macro": 0.07075208913649025,
+  "recall_macro": 0.1,
+  "f1_macro": 0.0828711256117455
+}
